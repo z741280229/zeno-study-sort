@@ -9,18 +9,42 @@ public class BasicSort{
 
 
 	public static void main(String[] args){
-		/*int[] bubbleSort = new int[]{3,2,1,5,6,7,10,9,8};
-		System.out.println("be sort By bubbleSort:" + Arrays.toString(bubbleSort(bubbleSort)));
 
-		int[] selectSort = new int[]{4,2,1,5,6,7,10,9,8,89,98,45,33,56};
+        int max = 10;
+        Random random = new Random(max);
+        int[] arr1 = new int[max];
+        int[] arr2 = new int[max];
+        for (int i = 0;i < max;i++){
+            arr1[i] = random.nextInt(max);
+            arr2[i] = arr1[i];
+        }
+        /*long start1 = System.currentTimeMillis();
+        bubbleSort(arr1);
+		//.out.println("be sort By bubbleSort:" + Arrays.toString(bubbleSort(arr)));
+        long end1 = System.currentTimeMillis();
+        System.out.println(end1 - start1);*/
+
+		/*int[] selectSort = new int[]{4,2,1,5,6,7,10,9,8,89,98,45,33,56};
 		System.out.println("be sort By selectSort:" + Arrays.toString(selectSort(selectSort)));*/
 
-		/*int[] qs= new int[]{6,1,2,7,9,3,4,5,10,8};
-		quickSort(qs,0,qs.length -1);
-		System.out.println("be sort By quickSort:" + Arrays.toString(qs));*/
 
-		int[] tree = new int[]{6,1,2,7,9,3,4,5,10,8,6,8,0};
-		System.out.println("be sort By heapfy:" + Arrays.toString(headfySort(tree)));
+        long start2 = System.currentTimeMillis();
+		quickSort(arr2,0,arr2.length -1);
+        long end2 = System.currentTimeMillis();
+		System.out.println("be sort By quickSort:" + Arrays.toString(arr2));
+
+        System.out.println(end2 - start2);
+
+        /*long start1 = System.currentTimeMillis();
+		System.out.println("be sort By heapfy:" + Arrays.toString(headfySort(arr2)));
+        long end1 = System.currentTimeMillis();
+        System.out.println(end1 - start2);*/
+
+        long start1 = System.currentTimeMillis();
+        headfySort2(arr1);
+        long end1 = System.currentTimeMillis();
+        System.out.println("be sort By heapfy:" + Arrays.toString(arr1));
+        System.out.println(end1 - start1);
 	}
 
 
@@ -89,7 +113,7 @@ public class BasicSort{
 			return;
 		}
 
-		int falg = partitionDemo2(sort,left,right);
+		int falg = partitionDemo1(sort,left,right);
 		quickSort(sort,left,falg -1);
 		quickSort(sort,falg + 1,right);
 	}
@@ -176,9 +200,8 @@ public class BasicSort{
      * 堆排序
      * @param arr
      */
-    public static int[] headfySort(int[] arr){
+    public static int[] headfySort1(int[] arr){
 	    for (int i = arr.length - 1;i >= 0;i--){
-
 	        heapfyArr(arr,i,(i-1)/2);
 	        swap(arr,0,i);
         }
@@ -194,8 +217,8 @@ public class BasicSort{
             return;
         }
         //开始比较父节点与子节点的大小，并做交换,leftNode：父节点下的左节点下标，rightNode：父节点下的右节点下标
-        int leftNode = 2 * parent + 1; //1
-        int rightNode = 2 * parent + 2; //2
+        int leftNode = 2 * parent + 1;
+        int rightNode = 2 * parent + 2;
         //2,10,9,5,7,8
         while (parent >= 0){
             //父节点与左孩子节点比较
@@ -213,6 +236,50 @@ public class BasicSort{
         }
     }
 
+
+
+
+    public static void headfySort2(int []arr){
+        //1.构建大顶堆
+        for(int i=arr.length/2-1;i>=0;i--){
+            //从第一个非叶子结点从下至上，从右至左调整结构
+            adjustHeap(arr,i,arr.length);
+        }
+        //2.调整堆结构+交换堆顶元素与末尾元素
+        for(int j=arr.length-1;j>0;j--){
+            swap(arr,0,j);//将堆顶元素与末尾元素进行交换
+            adjustHeap(arr,0,j);//重新对堆进行调整
+        }
+
+    }
+
+    /**
+     * 调整大顶堆（仅是调整过程，建立在大顶堆已构建的基础上）
+     * @param arr
+     * @param i
+     * @param length
+     */
+    public static void adjustHeap(int []arr,int i,int length){
+        int temp = arr[i];//先取出当前元素i
+        for(int k=i*2+1;k<length;k=k*2+1){//从i结点的左子结点开始，也就是2i+1处开始
+            if(k+1<length && arr[k]<arr[k+1]){//如果左子结点小于右子结点，k指向右子结点
+                k++;
+            }
+            if(arr[k] > temp){//如果子节点大于父节点，将子节点值赋给父节点（不用进行交换）
+                arr[i] = arr[k];
+                i = k;
+            }else{
+                break;
+            }
+        }
+        arr[i] = temp;//将temp值放到最终的位置
+    }
+
+
+
+
+
+
     /**
      * 数组交换
      * @param tree
@@ -227,9 +294,5 @@ public class BasicSort{
         tree[left] = tree[right];
         tree[right] = temp;
     }
-
-
-
-
 
 }
