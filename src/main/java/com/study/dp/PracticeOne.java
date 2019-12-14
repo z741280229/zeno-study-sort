@@ -48,9 +48,6 @@ public class PracticeOne {
         int notSelect = revOpt(arr,i -1);
         int selected = revOpt(arr,i -2) + arr[i];
         return max(notSelect,selected);
-
-
-
     }
 
     /**
